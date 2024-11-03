@@ -1,2 +1,6 @@
-# sytem_info_fully
-# sytem_info_fully
+# Code for getting full information about your system
+
+**You can know**
+>hostname
+>PID
+>OS infortmation
