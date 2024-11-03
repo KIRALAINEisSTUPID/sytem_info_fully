@@ -1,7 +1,15 @@
 import platform
 import psutil
 import socket
-import netifaces  # Для получения более детализированной информации о сетевых интерфейсах
+import netifaces
+
+def format_bytes(size):
+    # Функция для форматирования размера в байты, МБ и ГБ
+    for unit in ['B', 'KB', 'MB', 'GB', 'TB']:
+        if size < 1024:
+            return f"{size:.2f} {unit}"
+        size /= 1024
+    return f"{size:.2f} PB"
 
 def get_system_info():
     info = {}
@@ -24,16 +32,16 @@ def get_system_info():
 
     # Информация о памяти
     mem = psutil.virtual_memory()
-    info['memory_total'] = mem.total
-    info['memory_available'] = mem.available
-    info['memory_used'] = mem.used
+    info['memory_total'] = format_bytes(mem.total)
+    info['memory_available'] = format_bytes(mem.available)
+    info['memory_used'] = format_bytes(mem.used)
     info['memory_percent'] = mem.percent
 
     # Информация о диске
     disk = psutil.disk_usage('/')
-    info['disk_total'] = disk.total
-    info['disk_used'] = disk.used
-    info['disk_free'] = disk.free
+    info['disk_total'] = format_bytes(disk.total)
+    info['disk_used'] = format_bytes(disk.used)
+    info['disk_free'] = format_bytes(disk.free)
     info['disk_percent'] = disk.percent
 
     # Информация о сетевых интерфейсах
@@ -79,16 +87,16 @@ def save_system_info(info):
 
         # Информация о памяти
         file.write("Информация о памяти:\n")
-        file.write(f"Объем памяти: {info['memory_total']} - Общая память (в байтах)\n")
-        file.write(f"Доступно: {info['memory_available']} - Доступная память (в байтах)\n")
-        file.write(f"Используется: {info['memory_used']} - Используемая память (в байтах)\n")
+        file.write(f"Объем памяти: {info['memory_total']} - Общая память\n")
+        file.write(f"Доступно: {info['memory_available']} - Доступная память\n")
+        file.write(f"Используется: {info['memory_used']} - Используемая память\n")
         file.write(f"Загрузка памяти: {info['memory_percent']}% - Загруженность памяти (в %)\n\n")
 
         # Информация о диске
         file.write("Информация о диске:\n")
-        file.write(f"Объем диска: {info['disk_total']} - Общий объем диска (в байтах)\n")
-        file.write(f"Используется: {info['disk_used']} - Используемый объем диска (в байтах)\n")
-        file.write(f"Свободно: {info['disk_free']} - Свободный объем диска (в байтах)\n")
+        file.write(f"Объем диска: {info['disk_total']} - Общий объем диска\n")
+        file.write(f"Используется: {info['disk_used']} - Используемый объем диска\n")
+        file.write(f"Свободно: {info['disk_free']} - Свободный объем диска\n")
         file.write(f"Загрузка диска: {info['disk_percent']}% - Загруженность диска (в %)\n\n")
 
         # Информация о сетевых интерфейсах
